@@ -6,8 +6,8 @@
 function getMinMax(str) {
   const reg = /(-?\d+.?\d+)/g;
   let arr = str.match(reg);
-  arr.forEach((el, i) => {
-    arr[i] = parseFloat(el);
+  arr.forEach((elem, i) => {
+    arr[i] = parseFloat(elem);
   });
   const obj = {
     min: Math.min.apply(null, arr),
