@@ -29,7 +29,6 @@ function SortableTable(items) {
 
   let thead = document.createElement('thead');
   let trhead = document.createElement('tr');
-
   let headInfo = ['Name', 'Age', 'Salary', 'City']; 
 
   headInfo.forEach(item => {
@@ -40,7 +39,9 @@ function SortableTable(items) {
   thead.appendChild(trhead);
   this.el.appendChild(thead);
 
+  
   let tbody = document.createElement('tbody');
+
   items.forEach(item => {
     let trbody = document.createElement('tr');
     for (let key in item) {
