@@ -25,6 +25,7 @@ class Carousel {
     this.renderSlide(this.initialSlideId);
     this.nextSlide();
     this.prevSlide();
+    this.indicators();
   }
 
   createBasis() {
@@ -50,7 +51,9 @@ class Carousel {
 
     this.buttonPrev = document.createElement('button');
     this.buttonPrev.classList.add('carousel-control-prev');
-    this.buttonPrev.setAttribute('aria-hidden', true);
+    this.buttonPrev.setAttribute('href', '#mainCarousel');
+    this.buttonPrev.setAttribute('role', 'button');
+    this.buttonPrev.setAttribute('data-slide', 'prev');
     let buttonPrevIcon = document.createElement('span');
     buttonPrevIcon.classList.add('carousel-control-prev-icon');
     buttonPrevIcon.setAttribute('aria-hidden', true);
@@ -63,7 +66,9 @@ class Carousel {
 
     this.buttonNext = document.createElement('button');
     this.buttonNext.classList.add('carousel-control-next');
-    this.buttonNext.setAttribute('aria-hidden', true);
+    this.buttonNext.setAttribute('href', '#mainCarousel');
+    this.buttonNext.setAttribute('role', 'button');
+    this.buttonNext.setAttribute('data-slide', 'next');
     let buttonNextIcon = document.createElement('span');
     buttonNextIcon.classList.add('carousel-control-next-icon');
     buttonNextIcon.setAttribute('aria-hidden', true);
@@ -113,10 +118,11 @@ class Carousel {
     linkImg.setAttribute('alt', '');
     linkImg.classList.add('ml-3');
     link.appendChild(linkImg);
+    
+    this.indicatorsActive();
   }
 
   renderSlide(id) {
-    console.log(id);
     switch (id) {
     case 0: {
       this.createSlie(this.slides[0].img, this.slides[0].title);
@@ -135,7 +141,11 @@ class Carousel {
 
   nextSlide() {
     this.buttonNext.addEventListener('click', () => {
-      this.initialSlideId++;
+      if (this.initialSlideId === this.slides.length - 1) {
+        this.initialSlideId = 0;
+      } else {
+        this.initialSlideId++;
+      }
       this.item.remove();
       this.renderSlide(this.initialSlideId);
     });
@@ -143,9 +153,33 @@ class Carousel {
 
   prevSlide() {
     this.buttonPrev.addEventListener('click', () => {
-      this.initialSlideId--;
+      if (this.initialSlideId === 0) {
+        this.initialSlideId = this.slides.length - 1;
+      } else {
+        this.initialSlideId--;
+      }
       this.item.remove();
       this.renderSlide(this.initialSlideId);
+    });
+  }
+
+  indicatorsActive() {
+    const nextActiveIndicator = this.el.querySelector(`*[data-slide-to="${this.initialSlideId}"]`);
+    const allActiveIndicator = this.el.querySelectorAll(`*[data-slide-to]`);
+    allActiveIndicator.forEach(item => {
+      item.classList.remove('active');
+    });
+    nextActiveIndicator.classList.add('active');
+  }
+
+  indicators() {
+    this.indicatorsWrap.addEventListener('click', event => {
+      let target = event.target;
+      if (target.hasAttribute('data-target')) {
+        this.initialSlideId = +target.getAttribute('data-slide-to');
+        this.item.remove();
+        this.renderSlide(this.initialSlideId);
+      }
     });
   }
 }
