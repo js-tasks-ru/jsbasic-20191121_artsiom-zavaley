@@ -5,5 +5,5 @@
  */
 
 function promiseClick(button) {
-
+  
 }
