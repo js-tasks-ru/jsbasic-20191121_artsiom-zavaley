@@ -28,36 +28,37 @@ class Menu {
   constructor(element) {
     this.el = element;
     this.el.innerHTML = this.template;
-    this.dropdownHover();
-    this.dropdownOnHover();
+
+    const mainItem = this.el.querySelectorAll('.dropdown');
+    for (let item of mainItem) {
+      item.addEventListener('pointerenter', this.dropdownHover.bind(this));
+      item.addEventListener('pointerleave', this.dropdownOnHover.bind(this));
+    }
+    
+    this.el.querySelector('.list-group').addEventListener('click', this.click.bind(this));
+  }
+  
+  dropdownHover(event) {
+    document.querySelector('.backdrop').classList.add('show');
+    event.target.querySelector('.dropdown-menu').classList.add('show');
   }
 
-  dropdownHover() {
-    const mainItem = this.el.querySelectorAll('.dropdown');
-    const backdrop = document.querySelector('.backdrop');
-    mainItem.forEach(elem => {
-      elem.addEventListener('pointerenter', event => {
-        let target = event.target;
-        let currentItem = target.closest('.dropdown');
-        let subItem = currentItem.querySelector('.dropdown-menu');
-        subItem.classList.add('show');
-        backdrop.classList.add('show');
-      });
-    });
+  dropdownOnHover(event) {
+    document.querySelector('.backdrop').classList.remove('show');
+    event.target.querySelector('.dropdown-menu').classList.remove('show');
   }
 
-  dropdownOnHover() {
-    const mainItem = this.el.querySelectorAll('.dropdown');
-    const backdrop = document.querySelector('.backdrop');
-    mainItem.forEach(elem => {
-      elem.addEventListener('pointerleave', event => {
-        let target = event.target;
-        let currentItem = target.closest('.dropdown');
-        let subItem = currentItem.querySelector('.dropdown-menu');
-        subItem.classList.remove('show');
-        backdrop.classList.remove('show');
-      });
-    });
+  click(event) {
+    if (event.target.closest('.dropdown-item')) {
+      console.log(event.target.closest('.dropdown-item'));
+      event.target.closest('.dropdown-item').dispathEvent(new CustomEvent('select', {
+        detail: {
+          id: event.target.dataset.id
+        }
+      }));
+    } else {
+      return;
+    }
   }
 }
 
